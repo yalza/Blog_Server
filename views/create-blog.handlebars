@@ -1,0 +1,29 @@
+<div class="container">
+  <form class="form" method="POST">
+    <h2 class="form__title">Tạo bài viết mới</h2>
+    <div class="form__group">
+      <label class="form__label" for="title">Tiêu đề</label>
+      <input
+        class="form__input"
+        type="text"
+        id="title"
+        name="title"
+        placeholder="Enter title here....."
+        required
+      />
+    </div>
+    <div class="form__group">
+      <label class="form__label" for="content">Nội dung</label>
+      <textarea
+        class="form__textarea"
+        id="content"
+        name="content"
+        placeholder="Enter content here....."
+        required
+      ></textarea>
+    </div>
+    <button class="form__button" type="submit">Đăng bài</button>
+  </form>
+</div>
+
+<link rel="stylesheet" href="/css/createBlog.css" />
