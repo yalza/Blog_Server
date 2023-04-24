@@ -89,6 +89,14 @@ class BlogDetailController {
       })
       .catch((err) => {});
   }
+
+  deleteComment(req, res) {
+    CommentModel.deleteOne({ _id: req.params.id })
+      .then((data) => {
+        res.redirect(req.get("referer"));
+      })
+      .catch((err) => {});
+  }
 }
 
 module.exports = new BlogDetailController();

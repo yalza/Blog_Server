@@ -19,7 +19,7 @@ router.get(
   MyBlogController.showAndUpdateBlog
 );
 
-router.post(
+router.get(
   "/update-blog/:id",
   AcountController.verify,
   MyBlogController.updateBlog

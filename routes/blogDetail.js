@@ -11,6 +11,12 @@ router.get(
   BlogDetailController.show
 );
 
+router.get(
+  "/delete-comment/:id",
+  AcountController.verify,
+  BlogDetailController.deleteComment
+);
+
 router.post("/blog-detail/:id", BlogDetailController.comment);
 
 module.exports = router;
