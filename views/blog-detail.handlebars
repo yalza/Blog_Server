@@ -10,6 +10,7 @@
     </div>
   </div>
   <div class="comment__list">
+
     <h3>Comment</h3>
     {{#each comments}}
       <div class="comment__item">
@@ -18,10 +19,14 @@
         >{{this.author}}</span>
         <span style="opacity:0.7">{{this.date}}</span>
         <p>{{this.comment}}</p>
-        <a href="/delete-comment/{{this._id}}"><button
-            type="button"
-            class="btn-delete"
-          >Xóa</button></a>
+
+        {{#if (eq this.author this.authorBlog)}}
+
+          <a href="/delete-comment/{{this._id}}"><button
+              type="button"
+              class="btn-delete"
+            >Xóa</button></a>
+        {{/if}}
         <a href=""><button type="button" class="btn-update">Sửa</button></a>
       </div>
     {{/each}}

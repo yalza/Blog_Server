@@ -1,0 +1,16 @@
+Đăng Nhập
+Đăng ký
+Đăng xuất 
+Hiển thị thông tin người dùng
+Chỉnh sửa thông tin người dùng
+Hiển thị danh sách tất cả các bài viết
+Hiển thị danh sách bài viết của tôi
+Hiển thị chi tiết của mỗi bài viết
+Hiển thị thông tin của tác giả
+Tạo bài viết mới
+Xóa bài viết của tôi
+Sửa bài viết của tôi
+Comment bài viết
+Xóa comment của bài viết
+Sửa comment của bài viết    
+Phân trang cho danh sách bài viết

@@ -140,3 +140,7 @@ h3 {
 .btn-update {
   background: rgb(126, 244, 126);
 }
+
+.hidden {
+  overflow: hidden;
+}

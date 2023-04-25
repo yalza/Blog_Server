@@ -25,6 +25,7 @@ class BlogDetailController {
                 .then((comments) => {
                   comments = comments.map((comment) => comment.toObject());
                   comments.forEach(function (comment) {
+                    comment.authorBlog = data.username;
                     comment.date = comment._id
                       .getTimestamp()
                       .toLocaleString("en-US", {
