@@ -14,4 +14,6 @@ router.get("/delete-comment/:id", BlogDetailController.deleteComment);
 
 router.post("/blog-detail/:id", BlogDetailController.comment);
 
+router.get("/like/:id", BlogDetailController.like);
+
 module.exports = router;

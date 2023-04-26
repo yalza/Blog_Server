@@ -7,4 +7,6 @@ router.get("/profile", AcountController.showProfile);
 
 router.post("/profile", AcountController.updateProfile);
 
+router.get("/author/:id", AcountController.showProfileAuthor);
+
 module.exports = router;

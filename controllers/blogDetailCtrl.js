@@ -19,6 +19,7 @@ class BlogDetailController {
             _id: new objectId(req.params.id.toString()),
           })
             .then((blog) => {
+              console.log(blog.like);
               CommentModel.find({ blogId: req.params.id })
                 .then((comments) => {
                   comments = comments.map((comment) => comment.toObject());
@@ -34,11 +35,13 @@ class BlogDetailController {
                         minute: "numeric",
                       });
                   });
+
                   res.json({
                     title: "Trang chủ",
                     comments: comments,
                     username: data.username,
                     titleBlog: blog.title,
+                    like: blog.like,
                     content: blog.content,
                     author: blog.author,
                     date: blog._id.getTimestamp().toLocaleString("en-US", {
@@ -87,9 +90,27 @@ class BlogDetailController {
   deleteComment(req, res) {
     CommentModel.deleteOne({ _id: req.params.id })
       .then((data) => {
-        res.redirect(req.get("referer"));
+        res.json(data);
       })
       .catch((err) => {});
+  }
+
+  like(req, res) {
+    BlogModel.findOne({ _id: req.params.id })
+      .then((blog) => {
+        let num = parseInt(blog.like);
+        num += 1;
+        let newLike = num.toString();
+        return BlogModel.findOneAndUpdate(
+          { _id: req.params.id },
+          { $set: { like: newLike } },
+          { new: true } // để trả về dữ liệu mới sau khi update
+        );
+      })
+      .then((data) => {
+        res.json("like thanh cong");
+      })
+      .catch((err) => console.log(err));
   }
 }
 

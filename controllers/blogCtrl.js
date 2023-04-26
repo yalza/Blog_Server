@@ -15,6 +15,7 @@ class BlogController {
           author: data.username,
           title: req.body.title,
           content: req.body.content,
+          like: 1,
         }).then((blog) => {
           res.json({
             _id: blog._id,

@@ -108,6 +108,21 @@ class AcountController {
       .catch((err) => {});
   }
 
+  showProfileAuthor(req, res) {
+    AcountModel.findOne({ username: req.params.id })
+      .then((data) => {
+        res.json({
+          username: data.username,
+          hometown: data.hometown,
+          dateofbirth: data.dateofbirth,
+          fullname: data.fullname,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   updateProfile(req, res) {
     AcountModel.findOneAndUpdate(
       { username: User.getUser().username },

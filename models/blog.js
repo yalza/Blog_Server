@@ -7,6 +7,7 @@ const BlogModel = new Schema(
     author: String,
     title: String,
     content: { type: String, trim: false },
+    like: String,
   },
   {
     collection: "blog",
