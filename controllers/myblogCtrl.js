@@ -1,18 +1,17 @@
 const BlogModel = require("../models/blog");
 const AcountModel = require("../models/account");
-const jwt = require("jsonwebtoken");
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const User = require("../controllers/User");
 
 const app = express();
 app.use(cookieParser());
 
 class MyBlogController {
   show(req, res) {
-    var token = req.cookies.token;
-    var kq = jwt.verify(token, "toandeptrai");
-
-    AcountModel.findOne({ _id: kq._id })
+    AcountModel.findOne({
+      username: User.getUser().username,
+    })
       .then((data) => {
         BlogModel.find({ author: data.username }).then((blogs) => {
           blogs = blogs.map((blog) => blog.toObject());
@@ -25,10 +24,8 @@ class MyBlogController {
               minute: "numeric",
             });
           });
-          res.render("myblog", {
+          res.json({
             title: "Blog của tôi",
-            header: "headerhome",
-            footer: "footerhome",
             username: data.username,
             blogs: blogs,
             id: blogs._id,
@@ -43,26 +40,22 @@ class MyBlogController {
   deleteBlog(req, res) {
     BlogModel.findOneAndDelete({ _id: req.params.id })
       .then((data) => {
-        res.redirect("/myblog");
+        res.json("xoa thanh cong");
       })
       .catch((err) => {});
   }
 
   showAndUpdateBlog(req, res) {
-    var token = req.cookies.token;
-    var kq = jwt.verify(token, "toandeptrai");
-
-    AcountModel.findOne({ _id: kq._id })
+    AcountModel.findOne({ username: User.getUser().username })
       .then((data) => {
         BlogModel.findOne({ _id: req.params.id })
           .then((blog) => {
-            res.render("updateblog", {
+            res.json({
               title: "Sua blog",
-              header: "headerhome",
-              footer: "footerhome",
               username: data.username,
               titleBlog: blog.title,
               contentBlog: blog.content,
+              _id: req.params.id,
             });
           })
           .catch((err) => {});
@@ -83,7 +76,7 @@ class MyBlogController {
         new: true,
       }
     ).then((data) => {
-      res.redirect("/blog-detail/" + req.params.id);
+      res.json("AAAAAAAAA");
     });
   }
 }

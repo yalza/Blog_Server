@@ -1,28 +1,13 @@
 const express = require("express");
 const router = express.Router();
-
-const BlogController = require("../controllers/blogCtrl");
-const AcountController = require("../controllers/accountCtrl");
 const MyBlogController = require("../controllers/myblogCtrl");
-const blogDetailCtrl = require("../controllers/blogDetailCtrl");
 
-router.get("/myblog", AcountController.verify, MyBlogController.show);
-router.get(
-  "/delete-blog/:id",
-  AcountController.verify,
-  MyBlogController.deleteBlog
-);
+router.get("/myblog", MyBlogController.show);
 
-router.get(
-  "/update-blog/:id",
-  AcountController.verify,
-  MyBlogController.showAndUpdateBlog
-);
+router.get("/delete-blog/:id", MyBlogController.deleteBlog);
 
-router.get(
-  "/update-blog/:id",
-  AcountController.verify,
-  MyBlogController.updateBlog
-);
+router.get("/update-blog/:id", MyBlogController.showAndUpdateBlog);
+
+router.post("/update-blog/:id", MyBlogController.updateBlog);
 
 module.exports = router;

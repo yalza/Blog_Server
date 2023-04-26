@@ -4,8 +4,8 @@ const router = express.Router();
 const BlogController = require("../controllers/blogCtrl");
 const AcountController = require("../controllers/accountCtrl");
 
-router.get("/create-blog", AcountController.verify, BlogController.show);
+router.get("/create-blog", BlogController.show);
 
-router.post("/create-blog", AcountController.verify, BlogController.createBlog);
+router.post("/create-blog", BlogController.createBlog);
 
 module.exports = router;

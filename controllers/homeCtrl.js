@@ -1,18 +1,23 @@
 const BlogModel = require("../models/blog");
 const AcountModel = require("../models/account");
-const jwt = require("jsonwebtoken");
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const User = require("../controllers/User");
+
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+
+const dom = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+const document = dom.window.document;
 
 const app = express();
 app.use(cookieParser());
 
 class HomeController {
   show(req, res) {
-    var token = req.cookies.token;
-    var kq = jwt.verify(token, "toandeptrai");
-
-    AcountModel.findOne({ _id: kq._id })
+    var username = User.getUser().username;
+    var password = User.getUser().password;
+    AcountModel.findOne({ username: username, password: password })
       .then((data) => {
         if (data) {
           BlogModel.find().then((blogs) => {
@@ -26,10 +31,8 @@ class HomeController {
                 minute: "numeric",
               });
             });
-            res.render("home", {
+            res.json({
               title: "Trang chủ",
-              header: "headerhome",
-              footer: "footerhome",
               username: data.username,
               blogs: blogs,
             });

@@ -1,20 +1,18 @@
 const BlogModel = require("../models/blog");
 const AcountModel = require("../models/account");
 const CommentModel = require("../models/comment");
-const jwt = require("jsonwebtoken");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const objectId = mongoose.Types.ObjectId;
+const User = require("../controllers/User");
 
 const app = express();
 app.use(cookieParser());
 
 class BlogDetailController {
   show(req, res) {
-    var token = req.cookies.token;
-    var kq = jwt.verify(token, "toandeptrai");
-    AcountModel.findOne({ _id: kq._id })
+    AcountModel.findOne({ username: User.getUser().username })
       .then((data) => {
         if (req.params.id) {
           BlogModel.findOne({
@@ -36,10 +34,8 @@ class BlogDetailController {
                         minute: "numeric",
                       });
                   });
-                  res.render("blog-detail", {
+                  res.json({
                     title: "Trang chủ",
-                    header: "headerhome",
-                    footer: "footerhome",
                     comments: comments,
                     username: data.username,
                     titleBlog: blog.title,
@@ -63,16 +59,13 @@ class BlogDetailController {
   }
 
   comment(req, res) {
-    var token = req.cookies.token;
-    var kq = jwt.verify(token, "toandeptrai");
-    AcountModel.findOne({ _id: kq._id })
+    AcountModel.findOne({ username: User.getUser().username })
       .then((data) => {
         if (req.params.id) {
           BlogModel.findOne({
             _id: new objectId(req.params.id.toString()),
           })
             .then((blog) => {
-              console.log(req.body);
               CommentModel.create({
                 author: data.username,
                 comment: req.body.comment,

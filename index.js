@@ -5,10 +5,12 @@ const bodyParser = require("body-parser");
 const route = require("./routes/index");
 const db = require("./config/connectdb");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 const app = express();
 const port = 3000;
 
+app.use(cors());
 app.use(cookieParser());
 
 db.connect();

@@ -1,91 +1,20 @@
 const AcountModel = require("../models/account");
-const jwt = require("jsonwebtoken");
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const User = require("../controllers/User");
 
 const app = express();
 app.use(cookieParser());
 
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == " ") {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
-
-function setCookie(res, cname, cvalue, exdays) {
-  const d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  const options = { expires: d, path: "/" }; // set the options object with the expires option
-  res.cookie(cname, cvalue, options); // set the cookie with the options object
-}
-
 class AcountController {
-  login(req, res) {
+  show(req, res) {
     AcountModel.findOne({
-      username: req.body.username,
-      password: req.body.password,
+      username: User.getUser().username,
     })
       .then((data) => {
         if (data) {
-          var token = jwt.sign(
-            {
-              _id: data._id,
-            },
-            "toandeptrai"
-          );
-
-          try {
-            setCookie(res, "token", token, 1);
-          } catch (err) {
-            console.log(err);
-          }
-
-          res.redirect("/home");
-        } else {
-          res.redirect("/signup");
-        }
-      })
-      .catch((err) => {});
-  }
-
-  verify(req, res, next) {
-    try {
-      var token = req.cookies.token;
-      var kq = jwt.verify(token, "toandeptrai");
-      // AcountModel.findOne({ _id: kq._id })
-      //   .then((data) => {
-      //     console.log(data);
-      //   })
-      //   .catch((err) => {});
-      if (kq) {
-        next();
-      }
-    } catch (err) {
-      res.redirect("/login");
-    }
-  }
-
-  show(req, res) {
-    var token = req.cookies.token;
-    var kq = jwt.verify(token, "toandeptrai");
-
-    AcountModel.findOne({ _id: kq._id })
-      .then((data) => {
-        if (data) {
-          res.render("home", {
+          res.json({
             title: "Trang chủ",
-            header: "headerhome",
-            footer: "footerhome",
             username: data.username,
           });
         }
@@ -94,9 +23,7 @@ class AcountController {
   }
 
   checkAdmin(req, res, next) {
-    var token = req.cookies.token;
-    var kq = jwt.verify(token, "toandeptrai");
-    AcountModel.findOne({ _id: kq._id })
+    AcountModel.findOne({ username: User.getUser().username })
       .then((data) => {
         if (data.role === "admin") {
           next();
@@ -109,17 +36,16 @@ class AcountController {
 
   signup(req, res, next) {
     if (!req.body.password || !req.body.confirmpassword || !req.body.username) {
-      res.redirect("/signup");
-    }
-    if (req.body.password != req.body.confirmpassword) {
-      res.redirect("/signup");
+      return res.status(400).send("Không được để trống");
+    } else if (req.body.password != req.body.confirmpassword) {
+      return res.status(422).send("mật khẩu không trùng khớp");
     }
     AcountModel.findOne({
       username: req.body.username,
     })
       .then((data) => {
         if (data) {
-          res.redirect("/login");
+          return res.status(409).send("tài khoản đã tồi tại");
         }
         AcountModel.create({
           username: req.body.username,
@@ -130,7 +56,7 @@ class AcountController {
           dateofbirth: "",
         })
           .then((data) => {
-            res.redirect("/login");
+            return res.status(201).send("Đăng ký tài khoản thành công");
           })
           .catch((err) => {
             console.log(err);
@@ -168,14 +94,10 @@ class AcountController {
   }
 
   showProfile(req, res) {
-    var token = req.cookies.token;
-    var kq = jwt.verify(token, "toandeptrai");
-    AcountModel.findOne({ _id: kq._id })
+    AcountModel.findOne({ username: User.getUser().username })
       .then((data) => {
-        res.render("profile", {
+        res.json({
           title: "Trang chủ",
-          header: "headerhome",
-          footer: "footerhome",
           username: data.username,
           password: data.password,
           hometown: data.hometown,
@@ -187,10 +109,8 @@ class AcountController {
   }
 
   updateProfile(req, res) {
-    var token = req.cookies.token;
-    var kq = jwt.verify(token, "toandeptrai");
     AcountModel.findOneAndUpdate(
-      { _id: kq._id },
+      { username: User.getUser().username },
       {
         $set: {
           password: req.body.password,
@@ -204,11 +124,8 @@ class AcountController {
       }
     )
       .then((data) => {
-        console.log(data);
-        res.render("profile", {
+        res.json({
           title: "Trang chủ",
-          header: "headerhome",
-          footer: "footerhome",
           username: data.username,
           password: data.password,
           hometown: data.hometown,
